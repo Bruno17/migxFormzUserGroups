@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<model package="migxformzusergroups" baseClass="xPDOObject" platform="mysql" defaultEngine="MyISAM" phpdoc-package="formz" version="1.1">
+    <object class="fmzForms" table="formz_forms" extends="xPDOSimpleObject">
+        <field key="name" dbtype="varchar" precision="100" phptype="string" null="false" default="" />
+        <field key="method" dbtype="enum" phptype="string" null="false" precision="'database','database_email'" default="database_email" />
+        <field key="email" dbtype="text" phptype="string" null="true" default="" />
+        <field key="success_message" dbtype="text" phptype="string" null="true" default="" />
+        <field key="identifier" dbtype="varchar" precision="255" phptype="string" null="true" default="" />
+        <field key="hooks" dbtype="text" precision="255" phptype="string" null="true" default="" />
+        <field key="action_button" dbtype="varchar" precision="255" phptype="string" null="true" default="" />
+        <field key="properties" dbtype="text" precision="255" phptype="string" null="true" default="" />
+
+        <field key="createdon" dbtype="datetime" phptype="datetime" null="true" />
+		<field key="createdby" dbtype="int" precision="10" attributes="unsigned" phptype="integer" null="false" default="0" />
+		<field key="editedon" dbtype="datetime" phptype="datetime" null="true" />
+		<field key="editedby" dbtype="int" precision="10" attributes="unsigned" phptype="integer" null="false" default="0" />
+
+		<aggregate alias="CreatedBy" class="modUser" local="createdby" foreign="id" cardinality="one" owner="foreign" />
+		<aggregate alias="EditedBy" class="modUser" local="createdby" foreign="id" cardinality="one" owner="foreign" />
+		<composite alias="Fields" class="fmzFormsFields" local="id" foreign="form_id" cardinality="many" owner="local" />
+		<composite alias="Data" class="fmzFormsData" local="id" foreign="form_id" cardinality="many" owner="local" />
+        <composite alias="UserGroups" class="fmzFormsUsergroup" local="id" foreign="form_id" cardinality="many" owner="local" />
+    </object>
+    
+    <object class="fmzFormsUsergroup" table="formz_forms_usergroups" extends="xPDOSimpleObject">
+    	<field key="form_id" dbtype="int" precision="10" attributes="unsigned" phptype="integer" null="false" default="" index="index" />
+    	<field key="group_id" dbtype="int" precision="10" attributes="unsigned" phptype="integer" null="false" default="" index="index" />
+
+		<aggregate alias="Form" class="fmzForms" local="form_id" foreign="id" cardinality="one" owner="foreign" />
+		<aggregate alias="UserGroup" class="modUserGroup" local="group_id" foreign="id" cardinality="one" owner="foreign" />
+    </object>
+
+</model>
